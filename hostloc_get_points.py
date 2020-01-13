@@ -5,9 +5,9 @@ import random
 import re
 
 
-def randomly_gen_uspace_url():
-    uid_list = random.sample(range(10000,35000),12)
-    return list(map(lambda n:"https://www.hostloc.com/space-uid-{}.html".format(str(n)), uid_list))
+def randomly_gen_uspace_url(num):
+    uid_list = random.sample(range(10000,35000),num)
+    return list(map(lambda id:"https://www.hostloc.com/space-uid-{}.html".format(str(id)), uid_list))
 
 
 def login(username, password):
@@ -41,7 +41,7 @@ def check_login_status(s, number_c):
 
 def get_points(s, number_c):
     if check_login_status(s, number_c):
-        url_list = randomly_gen_uspace_url()
+        url_list = randomly_gen_uspace_url(10)
         for url in url_list:
             try:
                 s.get(url)
