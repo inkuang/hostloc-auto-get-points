@@ -6,13 +6,8 @@ import re
 
 
 def randomly_gen_uspace_url():
-    url_list = []
-    # 生成的随机数可能会重复，懒得去重了，多生成几个就行了
-    for i in range(12):
-        uid = random.randint(10000, 35000)
-        url = "https://www.hostloc.com/space-uid-{}.html".format(str(uid))
-        url_list.append(url)
-    return url_list
+    uid_list = random.sample(range(10000,35000),12)
+    return list(map(lambda n:"https://www.hostloc.com/space-uid-{}.html".format(str(n)), uid_list))
 
 
 def login(username, password):
