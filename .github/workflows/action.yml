@@ -6,6 +6,8 @@ on:
       - master
   schedule:
     - cron: '0 17 * * *'
+  watch:
+    types: [started]
 
 jobs:
   get_points:
