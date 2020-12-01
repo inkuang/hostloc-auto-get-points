@@ -1,9 +1,32 @@
 import os
 import requests
 from requests import Session as req_Session
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver import DesiredCapabilities
 import time
 import random
 import re
+
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
+
+
+# selenium模拟登录获取cookies
+def get_cookies(username: str, password: str):
+    props = dict(DesiredCapabilities.PHANTOMJS)
+    props['phantomjs.page.settings.userAgent'] = USER_AGENT
+    browser = webdriver.PhantomJS(desired_capabilities=props, service_log_path='/tmp/ghostdriver.log')
+    browser.get('https://www.hostloc.com/home.php?mod=spacecp')
+    input_user = browser.find_element_by_id('ls_username')
+    input_user.send_keys(username)
+    input_pwd = browser.find_element_by_id('ls_password')
+    input_pwd.send_keys(password)
+    input_pwd.send_keys(Keys.ENTER)
+    title = browser.title
+    if title.startswith('个人资料'):
+        cookies = browser.get_cookies()
+        return '; '.join(["{}={}".format(cookie['name'], cookie['value']) for cookie in cookies])
+    return None
 
 
 # 随机生成用户空间链接
@@ -72,8 +95,15 @@ def print_current_points(s: req_Session):
 
 
 # 依次访问随机生成的用户空间链接获取积分
-def get_points(s: req_Session, number_c: int):
-    if check_login_status(s, number_c):
+def get_points(cookie: str, number_c: int):
+    if cookie:
+        s = req_Session()
+        s.headers = {
+            "cookie": cookie,
+            "user-agent": USER_AGENT,
+            "origin": "https://www.hostloc.com",
+            "referer": "https://www.hostloc.com/forum.php",
+        }
         print_current_points(s)  # 打印帐户当前积分
         url_list = randomly_gen_uspace_url()
         # 依次访问用户空间链接获取积分，出现错误时不中断程序继续尝试访问下一个链接
@@ -122,8 +152,8 @@ if __name__ == "__main__":
         # 依次登录帐户获取积分，出现错误时不中断程序继续尝试下一个帐户
         for i in range(len(user_list)):
             try:
-                s = login(user_list[i], passwd_list[i])
-                get_points(s, i + 1)
+                cookie = get_cookies(user_list[i], passwd_list[i])
+                get_points(cookie, i + 1)
                 print("*" * 30)
             except Exception as e:
                 print("程序执行异常：" + str(e))
