@@ -12,7 +12,7 @@
 新增自动通过防 CC 机制验证的功能，解决了 Hostloc 开启防御时脚本无法正常使用的问题。  
 如有最近一段时间出现各种报错或者无法正常获取积分的请尝试更新，相关问题讨论见 [#issues22](https://github.com/inkuang/hostloc-auto-get-points/issues/22)、[#issues24](https://github.com/inkuang/hostloc-auto-get-points/issues/24)
 
-#### 2020年7月13日
+#### 2020年7月13日11
 
 新增显示当前所使用 IP 地址、显示登录后和获取积分完成后帐户总积分数的功能。
 
