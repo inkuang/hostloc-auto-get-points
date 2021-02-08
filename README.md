@@ -29,6 +29,9 @@ Fork 本仓库，然后点击你的仓库右上角的 Settings，找到 Secrets 
 
 其中 `HOSTLOC_USERNAME` 存放你在 Hostloc 的帐户名，`HOSTLOC_PASSWORD` 存放你的帐户密码。支持同时添加多个帐户，数据之间用半角逗号 `,` 隔开即可，帐户名和帐户密码需一一对应。
 
+可选功能：配置 sre24推送信息到手机微信/邮件等提醒, PC浏览器打开 https://sre24.com/ 微信扫码免费注册登录后，在「设置」页面复制 token；
+在 Secrets 添加一个秘密环境变量 `SRE24PUSH_TOKEN`，注意这里不支持配置多个，与上面账号密码不一样，只需配置一个即可。
+
 设置好环境变量后点击你的仓库上方的 Actions 选项，会打开一个如下的页面，点击 `I understand...` 按钮确认在 Fork 的仓库上启用 GitHub Actions 。
 
 ![在 Fork 的仓库上启用 GitHub Actions](./images/understand-workflows.png)

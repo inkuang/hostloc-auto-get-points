@@ -1,12 +1,25 @@
 import os
-import time
 import random
 import re
-import textwrap
 import requests
-
+import textwrap
+import time
+import urllib.parse
 from pyaes import AESModeOfOperationCBC
 from requests import Session as req_Session
+
+
+# 可选：配置 sre24推送信息到手机提醒, PC浏览器打开 https://sre24.com/ 微信扫码免费注册登录后，在「设置」页面复制 token
+def notify_user(token: str, msg: str, prefix='[hostloc] '):
+    if not token:
+        return
+
+    qs = urllib.parse.urlencode(dict(
+        token=token,
+        msg=prefix + msg,
+    ))
+    rs = requests.get(url="https://sre24.com/api/v1/push?" + qs).json()
+    assert int(rs["code"] / 100) == 2, rs
 
 
 # 随机生成用户空间链接
@@ -174,6 +187,7 @@ def print_my_ip():
 if __name__ == "__main__":
     username = os.environ["HOSTLOC_USERNAME"]
     password = os.environ["HOSTLOC_PASSWORD"]
+    token = os.environ.get("SRE24PUSH_TOKEN", "")
 
     # 分割用户名和密码为列表
     user_list = username.split(",")
@@ -181,8 +195,10 @@ if __name__ == "__main__":
 
     if not username or not password:
         print("未检测到用户名或密码，请检查环境变量是否设置正确！")
+        notify_user(token=token, msg="未检测到用户名或密码，请检查环境变量是否设置正确！")
     elif len(user_list) != len(passwd_list):
         print("用户名与密码个数不匹配，请检查环境变量设置是否错漏！")
+        notify_user(token=token, msg="用户名与密码个数不匹配，请检查环境变量设置是否错漏！")
     else:
         print_my_ip()
         print("共检测到", len(user_list), "个帐户，开始获取积分")
@@ -196,7 +212,9 @@ if __name__ == "__main__":
                 print("*" * 30)
             except Exception as e:
                 print("程序执行异常：" + str(e))
+                notify_user(token=token, msg="程序执行异常：" + str(e))
                 print("*" * 30)
             continue
 
         print("程序执行完毕，获取积分过程结束")
+        notify_user(token=token, msg="程序执行完毕，获取积分过程结束")

@@ -23,4 +23,5 @@ jobs:
       env:
         HOSTLOC_USERNAME: ${{ secrets.HOSTLOC_USERNAME }}
         HOSTLOC_PASSWORD: ${{ secrets.HOSTLOC_PASSWORD }}
+        SRE24PUSH_TOKEN: ${{ secrets.SRE24PUSH_TOKEN }}
       run: python hostloc_get_points.py
