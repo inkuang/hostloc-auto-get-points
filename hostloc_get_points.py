@@ -15,7 +15,7 @@ def randomly_gen_uspace_url() -> list:
     # 访问小黑屋用户空间不会获得积分、生成的随机数可能会重复，这里多生成两个链接用作冗余
     for i in range(12):
         uid = random.randint(10000, 50000)
-        url = "https://hostloc.com/space-uid-{}.html".format(str(uid))
+        url = "https://www.hostloc.com/space-uid-{}.html".format(str(uid))
         url_list.append(url)
     return url_list
 
@@ -34,7 +34,7 @@ def check_anti_cc() -> dict:
     headers = {
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
     }
-    home_page = "https://hostloc.com/forum.php"
+    home_page = "https://www.hostloc.com/forum.php"
     res = requests.get(home_page, headers=headers)
     aes_keys = re.findall('toNumbers\("(.*?)"\)', res.text)
     cookie_name = re.findall('cookie="(.*?)="', res.text)
@@ -83,10 +83,10 @@ def gen_anti_cc_cookies() -> dict:
 def login(username: str, password: str) -> req_Session:
     headers = {
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36",
-        "origin": "https://hostloc.com",
-        "referer": "https://hostloc.com/forum.php",
+        "origin": "https://www.hostloc.com",
+        "referer": "https://www.hostloc.com/forum.php",
     }
-    login_url = "https://hostloc.com/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1"
+    login_url = "https://www.hostloc.com/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1"
     login_data = {
         "fastloginfield": "username",
         "username": username,
@@ -105,7 +105,7 @@ def login(username: str, password: str) -> req_Session:
 
 # 通过抓取用户设置页面的标题检查是否登录成功
 def check_login_status(s: req_Session, number_c: int) -> bool:
-    test_url = "https://hostloc.com/home.php?mod=spacecp"
+    test_url = "https://www.hostloc.com/home.php?mod=spacecp"
     res = s.get(test_url)
     res.raise_for_status()
     res.encoding = "utf-8"
@@ -125,7 +125,7 @@ def check_login_status(s: req_Session, number_c: int) -> bool:
 
 # 抓取并打印输出帐户当前积分
 def print_current_points(s: req_Session):
-    test_url = "https://hostloc.com/forum.php"
+    test_url = "https://www.hostloc.com/forum.php"
     res = s.get(test_url)
     res.raise_for_status()
     res.encoding = "utf-8"
